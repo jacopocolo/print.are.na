@@ -26,6 +26,7 @@ import CoverSpread from "components/CoverSpread"
 
 import { URLOptions } from "types"
 
+
 const BookContainer = styled.div`
   opacity: 0;
 `
@@ -75,11 +76,11 @@ const Book: React.FC<BookProps> = ({ channel, contents }) => {
 
       const view = options.defaultTo
         ? {
-            print: Bindery.View.PRINT,
-            preview: Bindery.View.PREVIEW,
-            flipbook: Bindery.View.FLIPBOOK,
-            undefined: "",
-          }[options.defaultTo]
+          print: Bindery.View.PRINT,
+          preview: Bindery.View.PREVIEW,
+          flipbook: Bindery.View.FLIPBOOK,
+          undefined: "",
+        }[options.defaultTo]
         : Bindery.View.PREVIEW
 
       Bindery.makeBook({
@@ -222,6 +223,20 @@ const BookWrapper: React.FC<BookWrapperProps> = ({
 
   const api = new API()
 
+  const mapLoop = async (channel: any) => {
+
+    const response = await fetch('/api/world', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ post: channel }),
+    });
+    const channelWithArticles = await response.text();
+    console.log(channelWithArticles);
+    setChannel(JSON.parse(channelWithArticles))
+  }
+
   useEffect(() => {
     if (!channel) {
       api
@@ -230,7 +245,9 @@ const BookWrapper: React.FC<BookWrapperProps> = ({
           isShare: options.isShare,
           reverse: options.reverse,
         })
-        .then(channel => setChannel(channel))
+        .then(channel => {
+          mapLoop(channel)
+        })
         .catch((error: Error) => {
           switch (error.message) {
             case "Unauthorized":

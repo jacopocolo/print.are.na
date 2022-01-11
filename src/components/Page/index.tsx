@@ -36,7 +36,7 @@ const Img = styled.img`
 
 const P = styled.p<{ hasAuthor?: boolean }>`
   margin: 0;
-  font-size: 13pt;
+  font-size: 11pt;
   line-height: 1.25;
 
   overflow-wrap: break-word;
